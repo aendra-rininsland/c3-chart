@@ -1,0 +1,27 @@
+{
+  "name": "c3-chart",
+  "keywords": [
+    "seed",
+    "polymer",
+    "web-components"
+  ],
+  "main": "c3-chart.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5.4",
+    "c3": "~0.4.9"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^2.2.3"
+  },
+  "homepage": "https://github.com/aendrew/c3-chart",
+  "_release": "49ee173cf6",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "49ee173cf6e50ab4c7272dec6e36428f1f2a4a2f"
+  },
+  "_source": "git://github.com/aendrew/c3-chart.git",
+  "_target": "master",
+  "_originalSource": "aendrew/c3-chart",
+  "_direct": true
+}

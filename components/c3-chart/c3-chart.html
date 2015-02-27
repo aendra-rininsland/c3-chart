@@ -1,0 +1,127 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+An element allowing the easy creation of C3-based charts.
+
+##### Example
+
+    <c3-chart></c3-chart>
+
+@element c3-chart
+@blurb Element allowing easy use of C3 via Polymer.
+@status alpha
+@homepage http://aendrew.github.io/c3-chart
+-->
+<polymer-element name="c3-chart" attributes="chart sample">
+  <template>
+    <link rel="stylesheet" href="../c3/c3.css">
+    <link rel="stylesheet" href="c3-chart.css">
+    <script type="text/javascript" src="../d3/d3.min.js"></script>
+    <script type="text/javascript" src="../c3/c3.js"></script>
+    <div id="chart"></div>
+  </template>
+  <script>
+    Polymer({
+      /**
+       * The `chart` attribute stores chart configuration as a JSON string.
+       *
+       * @attribute chart
+       * @type string
+       * @default false
+       */
+      chart: false,
+
+      /**
+       * The `sample` attribute specifies whether to display a sample chart if no initial config is present.
+       *
+       * @attribute sample
+       * @type boolean
+       * @default false
+       */
+      sample: false,
+
+      /**
+       * The `config` property stores the current chart config object.
+       *
+       * @property config
+       * @type object
+       * @default {}
+       */
+      config: {},
+
+      domReady: function () {
+        var el = this;
+        setTimeout(function(){
+          if (el.chart) {
+            el.config = JSON.parse(el.chart);
+            el.chart = c3.generate(el.config);
+          } else if (el.sample) {
+            el.chart = c3.generate({
+              bindto: el.$.chart,
+              data: {
+                columns: [
+                  ['data1', 1, 2, 6, 9, 10],
+                  ['data2', 5, 9, 2, 3, 7]
+                ]
+              }
+            });
+          }
+        }, 500);
+      },
+
+      /**
+       * The `generate` method wraps c3.generate().
+       *
+       * @method generate
+       * @param {Object} config Pass in a C3 configuration object.
+       * @return {Object} Returns the chart object.
+       */
+      generate: function (config) {
+        if (typeof this.chart.destroy === 'function') {
+          this.chart = this.chart.destroy();
+        }
+        this.chart = c3.generate(config);
+        return this.chart;
+      },
+
+      /**
+       * The `load` method wraps `chart.load()`.
+       * @see {@link http://c3js.org/reference.html#api-load|C3 API: load()}
+       *
+       * @method load
+       * @param {Object} data Arguments to pass to C3.
+       * @return {Object} Returns the chart object.
+       */
+      load: function (args) {
+        this.chart.load(args);
+        return this.chart;
+      },
+
+      /**
+       * The `flush` method wraps `chart.flush()` and forces a redraw.
+       * @see {@link http://c3js.org/reference.html#api-flush|C3 API: flush()}
+       *
+       * @method flush
+       * @return {Object} Returns the chart object.
+       */
+      flush: function () {
+        this.chart.flush();
+        return this.chart;
+      },
+
+      /**
+       * The `destroy` method wraps `chart.destroy()` and kills the chart.
+       * @see {@link http://c3js.org/reference.html#api-destroy|C3 API: destroy()}
+       *
+       * @method destroy
+       * @return {Object} Returns the chart object.
+       */
+      destroy: function () {
+        this.chart = this.chart.destroy();
+        return this.chart;
+      },
+
+
+    });
+  </script>
+</polymer-element>
