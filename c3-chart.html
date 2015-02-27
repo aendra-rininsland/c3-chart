@@ -1,0 +1,81 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+Element providing solution to no problem in particular.
+
+##### Example
+
+    <c3-chart></c3-chart>
+
+@element c3-chart
+@blurb Element allowing easy use of C3 via Polymer.
+@status alpha
+@homepage http://aendrew.github.io/c3-chart
+-->
+<polymer-element name="c3-chart" attributes="chart">
+  <template>
+    <link rel="stylesheet" href="../c3/c3.css">
+    <link rel="stylesheet" href="c3-chart.css">
+    <script type="text/javascript" src="../d3/d3.min.js"></script>
+    <script type="text/javascript" src="../c3/c3.js"></script>
+    <div id="chart"></div>
+  </template>
+  <script>
+    Polymer({
+      /**
+       * The `chart` attribute stores chart configuration.
+       *
+       * @attribute chart
+       * @type object
+       * @default {}
+       */
+      chart: {},
+
+      domReady: function () {
+        var el = this;
+        setTimeout(function(){
+          el.chart = c3.generate({
+            bindto: el.$.chart,
+            data: {
+              columns: [
+                ['data1', 1, 2, 6, 9, 10],
+                ['data2', 5, 9, 2, 3, 7]
+              ]
+            }
+          });
+        }, 500);
+      },
+
+      /**
+       * The `generate` method wraps c3.generate()
+       *
+       * @method generate
+       * @param {String} config Pass in a C3 configuration object.
+       * @return {String} Returns the chart object.
+       */
+      generate: function (config) {
+        this.chart = c3.generate(config);
+        return this.chart;
+      },
+
+      /**
+       * The `c3-chart-lasers-success` event is fired whenever we
+       * call fireLasers.
+       *
+       * @event c3-chart-lasers-success
+       * @param {Object} detail
+       *   @param {string} detail.sound An amazing sound.
+       */
+
+      /**
+       * The `fireLasers` method will fire the lasers. At least
+       * it will dispatch an event that claims lasers were fired :)
+       *
+       * @method fireLasers
+       */
+      fireLasers: function () {
+        this.fire('c3-chart-lasers-success', { sound: 'Pew pew pew!' });
+      }
+    });
+  </script>
+</polymer-element>
