@@ -12,7 +12,7 @@ Element providing solution to no problem in particular.
 @status alpha
 @homepage http://aendrew.github.io/c3-chart
 -->
-<polymer-element name="c3-chart" attributes="chart">
+<polymer-element name="c3-chart" attributes="chart sample">
   <template>
     <link rel="stylesheet" href="../c3/c3.css">
     <link rel="stylesheet" href="c3-chart.css">
@@ -23,59 +23,102 @@ Element providing solution to no problem in particular.
   <script>
     Polymer({
       /**
-       * The `chart` attribute stores chart configuration.
+       * The `chart` attribute stores chart configuration as a JSON string.
        *
        * @attribute chart
+       * @type string
+       * @default false
+       */
+      chart: false,
+
+      /**
+       * The `sample` attribute specifies whether to display a sample chart if no initial config is present.
+       *
+       * @attribute sample
+       * @type boolean
+       * @default false
+       */
+      sample: false,
+
+      /**
+       * The `config` attribute stores the current chart config object.
+       *
+       * @attribute config
        * @type object
        * @default {}
        */
-      chart: {},
+      config: {},
 
       domReady: function () {
         var el = this;
         setTimeout(function(){
-          el.chart = c3.generate({
-            bindto: el.$.chart,
-            data: {
-              columns: [
-                ['data1', 1, 2, 6, 9, 10],
-                ['data2', 5, 9, 2, 3, 7]
-              ]
-            }
-          });
+          if (el.chart) {
+            el.config = JSON.parse(el.chart);
+            el.chart = c3.generate(el.config);
+          } else if (el.sample) {
+            el.chart = c3.generate({
+              bindto: el.$.chart,
+              data: {
+                columns: [
+                  ['data1', 1, 2, 6, 9, 10],
+                  ['data2', 5, 9, 2, 3, 7]
+                ]
+              }
+            });
+          }
         }, 500);
       },
 
       /**
-       * The `generate` method wraps c3.generate()
+       * The `generate` method wraps c3.generate().
        *
        * @method generate
-       * @param {String} config Pass in a C3 configuration object.
-       * @return {String} Returns the chart object.
+       * @param {Object} config Pass in a C3 configuration object.
+       * @return {Object} Returns the chart object.
        */
       generate: function (config) {
+        if (typeof this.chart.destroy === 'function') {
+          this.chart = this.chart.destroy();
+        }
         this.chart = c3.generate(config);
         return this.chart;
       },
 
       /**
-       * The `c3-chart-lasers-success` event is fired whenever we
-       * call fireLasers.
+       * The `load` method wraps `chart.load()`. See http://c3js.org/reference.html#api-load
        *
-       * @event c3-chart-lasers-success
-       * @param {Object} detail
-       *   @param {string} detail.sound An amazing sound.
+       * @method load
+       * @param {Object} data [Arguments](http://c3js.org/reference.html#api-load) to pass to C3.
+       * @return {Object} Returns the chart object.
        */
+      load: function (args) {
+        this.chart.load(args);
+        return this.chart;
+      },
 
       /**
-       * The `fireLasers` method will fire the lasers. At least
-       * it will dispatch an event that claims lasers were fired :)
+       * The `flush` method wraps `chart.flush()` and forces a redraw. See http://c3js.org/reference.html#api-flush
        *
-       * @method fireLasers
+       * @method flush
+       * @return {Object} Returns the chart object.
        */
-      fireLasers: function () {
-        this.fire('c3-chart-lasers-success', { sound: 'Pew pew pew!' });
-      }
+      flush: function () {
+        this.chart.flush();
+        return this.chart;
+      },
+
+      /**
+       * The `destroy` method wraps `chart.destroy()` and kills the chart. See http://c3js.org/reference.html#api-destroy
+       *
+       * @method destroy
+       * @return {Object} Returns the chart object.
+       */
+      destroy: function () {
+        this.chart = this.chart.destroy();
+        return this.chart;
+      },
+
+
     });
   </script>
 </polymer-element>
